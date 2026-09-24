@@ -1,0 +1,29 @@
+[Unit]
+Description=Embedded Linux Device Health Monitor & Auto-Recovery Agent
+Documentation=https://github.com/my-labs/embedded-linux-health-monitor
+After=network.target systemd-journald.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/etc/health_monitor
+ExecStart=/usr/local/bin/device_health_monitor --config /etc/health_monitor/health_monitor.json
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5s
+KillMode=mixed
+TimeoutStopSec=10s
+
+CapabilityBoundingSet=CAP_SYS_ADMIN CAP_NET_ADMIN CAP_SYS_NICE CAP_SYS_RESOURCE
+AmbientCapabilities=CAP_SYS_ADMIN CAP_NET_ADMIN CAP_SYS_NICE
+LimitNOFILE=65536
+MemoryMax=64M
+CPUQuota=20%
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=device-health-monitor
+
+[Install]
+WantedBy=multi-user.target

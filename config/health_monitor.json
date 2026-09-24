@@ -1,0 +1,54 @@
+{
+  "device_id": "iot-edge-gateway-01",
+  "polling_interval_ms": 2000,
+  "log_file_path": "/var/log/device-health-monitor.log",
+  "log_level": "INFO",
+  "enable_syslog": true,
+  "enable_stdout": true,
+  "thresholds": {
+    "cpu": {
+      "warning_percent": 75.0,
+      "critical_percent": 85.0,
+      "consecutive_breaches_to_trigger": 3,
+      "auto_recovery_enabled": true,
+      "action": "renice_low_priority"
+    },
+    "memory": {
+      "warning_percent": 80.0,
+      "critical_percent": 90.0,
+      "min_available_mb": 64,
+      "auto_recovery_enabled": true,
+      "action": "drop_caches"
+    },
+    "disk": {
+      "monitored_mount_point": "/",
+      "warning_percent": 80.0,
+      "critical_percent": 90.0,
+      "auto_recovery_enabled": true,
+      "action": "cleanup_temp_and_journal"
+    },
+    "temperature": {
+      "thermal_zone_path": "/sys/class/thermal/thermal_zone0/temp",
+      "warning_celsius": 70.0,
+      "critical_celsius": 80.0,
+      "auto_recovery_enabled": true,
+      "action": "throttle_governor"
+    },
+    "network": {
+      "interface_name": "eth0",
+      "ping_target_ip": "8.8.8.8",
+      "ping_timeout_seconds": 2,
+      "max_consecutive_failures": 3,
+      "auto_recovery_enabled": true,
+      "action": "restart_interface"
+    },
+    "critical_service": {
+      "service_name": "iot-gateway",
+      "check_method": "systemd",
+      "max_restart_attempts": 5,
+      "cooldown_seconds": 30,
+      "auto_recovery_enabled": true,
+      "action": "restart_service"
+    }
+  }
+}
